@@ -38,7 +38,6 @@ const redisClient = redis.createClient({
 const sub = redisClient.duplicate();
 
 sub.on("message", async (channel, message) => {
-  console.log("enter sub")
   const technical_analysis = await new Promise((resolve) => {
     redisClient.hget("technical_analysis", message, (err, value) => {
       if (err) {
@@ -52,7 +51,6 @@ sub.on("message", async (channel, message) => {
   }).catch((err) => {
     console.log("Errot", err);
   });
-  console.log("tech" + technical_analysis)
   const stock = await new Promise((resolve) => {
     redisClient.hget("stocks", message, (err, value) => {
       if (err) {
@@ -66,7 +64,6 @@ sub.on("message", async (channel, message) => {
     console.log("Errot", err);
   });
 
-  console.log("stt" + stock)
 
   if (technical_analysis !== "" && stock) {
 
@@ -102,7 +99,6 @@ sub.on("message", async (channel, message) => {
       [stock_psql.rows[0].id, analysis_psql.rows[0].id, tech.target_hit]
     );
 
-    console.log(stock_psql.rows[0].id);
 
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   } else if (stock) {
@@ -121,7 +117,6 @@ sub.on("message", async (channel, message) => {
     );
 
 
-    console.log("The stock from psql2" + stock_psql.rows);
 
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   }
