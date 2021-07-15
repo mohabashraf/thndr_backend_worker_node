@@ -32,6 +32,7 @@ const redisClient = redis.createClient({
 const sub = redisClient.duplicate();
 
 sub.on("message", async (channel, message) => {
+  console.log("enter sub")
   const technical_analysis = await new Promise((resolve) => {
     redisClient.hget("technical_analysis", message, (err, value) => {
       if (err) {
@@ -45,7 +46,7 @@ sub.on("message", async (channel, message) => {
   }).catch((err) => {
     console.log("Errot", err);
   });
-
+  console.log("tech" + technical_analysis)
   const stock = await new Promise((resolve) => {
     redisClient.hget("stocks", message, (err, value) => {
       if (err) {
@@ -59,7 +60,12 @@ sub.on("message", async (channel, message) => {
     console.log("Errot", err);
   });
 
+  console.log("stt" + stock)
+
   if (technical_analysis !== "" && stock) {
+
+    console.log("enter if")
+
     const tech = JSON.parse(technical_analysis);
     const stockData = JSON.parse(stock);
     if (stockData.price > tech.target && tech.type === "UP") {
@@ -84,6 +90,8 @@ sub.on("message", async (channel, message) => {
 
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   } else if (stock) {
+
+    console.log("enter else")
     const stockData = JSON.parse(stock);
     const stock_psql = await pgClient.query(
       "INSERT INTO stocks(stock_id, name, price, availability, timestamp) VALUES($1, $2, $3, $4, $5) RETURNING id",
@@ -96,7 +104,7 @@ sub.on("message", async (channel, message) => {
       ]
     );
 
-    
+
     console.log("The stock from psql2" + stock_psql.rows);
 
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
