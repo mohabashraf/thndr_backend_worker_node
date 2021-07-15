@@ -74,7 +74,7 @@ sub.on("message", async (channel, message) => {
       [stock.stock_id, stock.name, stock.price, stock.availability, stock.timestamp]
     );
 
-    console.log("The stock from psql" + stock_psql.rows[0]);
+    console.log("The stock from psql1" + stock_psql.rows[0]);
     
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   }else if (stock){
@@ -84,7 +84,7 @@ sub.on("message", async (channel, message) => {
       [stock.stock_id, stock.name, stock.price, stock.availability, stock.timestamp]
     );
 
-    console.log("The stock from psql" + stock_psql.rows[0]);
+    console.log("The stock from psql2" + stock_psql.rows);
     
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   }
