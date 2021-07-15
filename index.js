@@ -14,15 +14,20 @@ sub.on('message', async (channel, message) => {
     redisClient.hget("technical_analysis", message, (err, value) => {
       if (err) {
         reject(err);
-        return res.status(422).send("error while retrieving value");
       }
-      resolve(JSON.parse(value.toString()));
+       if(value){
+         resolve(JSON.parse(value.toString()));
+       } 
     });
   }).catch((err) => {
     console.log("Errot", err);
   });
 
+  if(technical_analysis){
+    redisClient.hset('stocks_analysis', message, technical_analysis);
 
-  redisClient.hset('stocks_analysis', message, technical_analysis);
+  }
+
+
 });
 sub.subscribe('insert');
