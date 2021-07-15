@@ -16,7 +16,7 @@ sub.on('message', async (channel, message) => {
         reject(err);
       }
        if(value){
-         resolve(JSON.parse(value.toString()));
+         resolve(value);
        } 
     });
   }).catch((err) => {
