@@ -41,7 +41,7 @@ sub.on("message", async (channel, message) => {
       if (value) {
         resolve(value);
       }
-      resolve = "";
+      resolve("");
     });
   }).catch((err) => {
     console.log("Errot", err);
