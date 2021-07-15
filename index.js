@@ -22,6 +22,12 @@ pgClient.on("connect", (client) => {
       "CREATE TABLE IF NOT EXISTS stocks(id SERIAL PRIMARY KEY, stock_id text, name text, price INT, availability INT, timestamp timestamp)"
     )
     .catch((err) => console.error(err));
+
+    client
+    .query(
+      "CREATE TABLE IF NOT EXISTS admin_technical_analysis(id SERIAL PRIMARY KEY, stock_id text, target text, type text, time timestamp)"
+    )
+    .catch((err) => console.error(err));
 });
 
 const redisClient = redis.createClient({
@@ -84,6 +90,16 @@ sub.on("message", async (channel, message) => {
         stock.availability,
         stock.timestamp,
       ]
+    );
+    const analysis_psql = await pgClient.query(
+      "INSERT INTO admin_technical_analysis(stock_id, target, type, time) VALUES($1, $2, $3, $4) RETURNING id",
+      [stockData.stock_id, tech.target, tech.type, new Date().toISOString()]
+    );
+
+
+    await pgClient.query(
+      "INSERT INTO stock_analysis( stock_id, technical_analysis_id, target_hit) VALUES($1, $2, $3)",
+      [stock_psql.rows[0].id, analysis_psql.rows[0].id, tech.target_hit]
     );
 
     console.log(stock_psql.rows[0].id);
