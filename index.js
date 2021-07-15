@@ -38,9 +38,12 @@ sub.on('message', async (channel, message) => {
   });
 
 
-  if(technical_analysis){
+  if(technical_analysis && stock){
     const tech = JSON.parse(technical_analysis)
+    const sto = JSON.parse(stock)
+    sto.technical_analysis = tech
     console.log(tech)
+    console.log(sto)
     redisClient.hset('stocks_analysis', message, technical_analysis);
 
   }
