@@ -99,11 +99,11 @@ sub.on("message", async (channel, message) => {
     );
 
 
-    const record = await pgClient.query(
-      `SELECT  * From admin_technical_analysis where stock_id = ${stockData.stock_id} ORDER BY time DESC LIMIT 1`,
-    );
+    // const record = await pgClient.query(
+    //   `SELECT  * From admin_technical_analysis where stock_id = ${stockData.stock_id} ORDER BY time DESC LIMIT 1`,
+    // );
 
-    console.log("The record is " + record.rows)
+    // console.log("The record is " + record.rows)
 
 
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
