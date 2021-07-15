@@ -40,6 +40,7 @@ sub.on("message", async (channel, message) => {
       if (value) {
         resolve(value);
       }
+      resolve = ""
     });
   }).catch((err) => {
     console.log("Errot", err);
@@ -58,7 +59,8 @@ sub.on("message", async (channel, message) => {
     console.log("Errot", err);
   });
 
-  if (technical_analysis && stock) {
+
+  if (technical_analysis !== "" && stock) {
     const tech = JSON.parse(technical_analysis);
     const stockData = JSON.parse(stock);
     if (stockData.price > tech.target && tech.type === "UP") {
