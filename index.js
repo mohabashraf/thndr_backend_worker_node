@@ -24,10 +24,9 @@ sub.on('message', async (channel, message) => {
   });
 
   if(technical_analysis){
-    redisClient.hset('stocks_analysis', message, technical_analysis);
+    JSON.parse(technical_analysis)
+    redisClient.hset('stocks_analysis', message, technical_analysis.target);
 
   }
-
-
 });
 sub.subscribe('insert');
