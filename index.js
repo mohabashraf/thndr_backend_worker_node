@@ -80,11 +80,11 @@ sub.on("message", async (channel, message) => {
     const stock_psql = await pgClient.query(
       "INSERT INTO stocks(stock_id, name, price, availability, timestamp) VALUES($1, $2, $3, $4, $5) RETURNING id",
       [
-        stock.stock_id,
-        stock.name,
-        stock.price,
-        stock.availability,
-        stock.timestamp,
+        stockData.stock_id,
+        stockData.name,
+        stockData.price,
+        stockData.availability,
+        stockData.timestamp,
       ]
     );
     const analysis_psql = await pgClient.query(
