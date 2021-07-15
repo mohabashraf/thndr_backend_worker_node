@@ -67,7 +67,6 @@ sub.on("message", async (channel, message) => {
 
   if (technical_analysis !== "" && stock) {
 
-    console.log("enter if")
 
     const tech = JSON.parse(technical_analysis);
     const stockData = JSON.parse(stock);
@@ -100,10 +99,16 @@ sub.on("message", async (channel, message) => {
     );
 
 
+    const record = await pgClient.query(
+      `SELECT  * From admin_technical_analysis where stock_id = ${stockData.stock_id} ORDER BY time DESC LIMIT 1`,
+    );
+
+    console.log("The record is " + record.rows)
+
+
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   } else if (stock) {
 
-    console.log("enter else")
     const stockData = JSON.parse(stock);
     const stock_psql = await pgClient.query(
       "INSERT INTO stocks(stock_id, name, price, availability, timestamp) VALUES($1, $2, $3, $4, $5) RETURNING id",
