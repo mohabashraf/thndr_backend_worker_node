@@ -69,22 +69,22 @@ sub.on("message", async (channel, message) => {
     stockData.technical_analysis = tech;
 
 
-    const stock_psql = pgClient.query(
+    const stock_psql = await pgClient.query(
       "INSERT INTO stocks(stock_id, name, price, availability, timestamp) VALUES($1, $2, $3, $4, $5)",
       [stock.stock_id, stock.name, stock.price, stock.availability, stock.timestamp]
     );
 
-    console.log("The stock from psql" + stock_psql);
+    console.log("The stock from psql" + stock_psql.rows[0]);
     
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   }else if (stock){
     const stockData = JSON.parse(stock);
-    const stock_psql = pgClient.query(
+    const stock_psql = await pgClient.query(
       "INSERT INTO stocks(stock_id, name, price, availability, timestamp) VALUES($1, $2, $3, $4, $5)",
       [stock.stock_id, stock.name, stock.price, stock.availability, stock.timestamp]
     );
 
-    console.log("The stock from psql" + stock_psql);
+    console.log("The stock from psql" + stock_psql.rows[0]);
     
     redisClient.hset("stocks_analysis", message, JSON.stringify(stockData));
   }
