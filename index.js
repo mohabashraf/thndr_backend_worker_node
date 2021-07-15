@@ -61,15 +61,16 @@ sub.on("message", async (channel, message) => {
   if (technical_analysis && stock) {
     const tech = JSON.parse(technical_analysis);
     const stockData = JSON.parse(stock);
-    stockData.technical_analysis = tech;
     if (stockData.price > tech.target && tech.type === "UP") {
-      stockData.target_hit = true;
+      tech.target_hit = true;
     } else {
-      stockData.target_hit = false;
+      tech.target_hit = false;
     }
+    stockData.technical_analysis = tech;
+
 
     const stock_psql = pgClient.query(
-      "INSERT INTO stocks(stock_id, name, price, availability INT, timestamp timestamp) VALUES($1, $2, $3, $4)",
+      "INSERT INTO stocks(stock_id, name, price, availability, timestamp timestamp) VALUES($1, $2, $3, $4)",
       [stock.stock_id, stock.name, stock.price, stock.availability, stock.timestamp]
     );
 
