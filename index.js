@@ -62,7 +62,7 @@ sub.on("message", async (channel, message) => {
     const tech = JSON.parse(technical_analysis);
     const stockData = JSON.parse(stock);
     stockData.technical_analysis = tech;
-    if (stockData.price > target && type === "UP") {
+    if (stockData.price > tech.target && tech.type === "UP") {
       stockData.target_hit = true;
     } else {
       stockData.target_hit = false;
